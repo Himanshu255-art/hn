@@ -1,0 +1,277 @@
+var police;
+var Alex;
+var zombie1,zombie2,zombie3,zombie4;
+var zombie5;
+var gameState="start";
+var arrowGroup,zombieGroup;
+var score=0;
+var win=2;
+var Mickey;
+var timer=1;
+function preload(){
+  title=loadImage("images/Rescue.png")
+ Back=loadImage("images/background2.jpg")
+ ShootingPolice=loadImage("images/shootingpolice.png")
+ arch=loadImage("images/name.png")
+ bullet=loadImage("images/bullet.png")
+ JohnImage=loadImage("images/John.png")
+ Zombie1=loadImage("images/download.png")
+ Zombie2=loadImage("images/images.png")
+Zombie3=loadImage("images/Zombie3.png")
+Winning=loadImage("images/winning.jpg")
+Sound=loadSound("images/background.mp3")
+Mickey=loadImage("images/winner_mickey.png")
+Design=loadImage("images/Design.png")
+lost=loadImage("images/lost.jpg")
+loserMickey=loadImage("images/unnamed.png")
+thumbsUp=loadImage("images/thumbs.png")
+thumbsDown=loadImage("images/thumbs_Down.png")
+doreamon=loadImage("images/doreamon.png")
+nobita=loadImage("images/nobi.png")
+}
+function setup() {
+ var canvas= createCanvas(displayWidth,displayHeight);
+ 
+  
+  Police=createSprite(1600,470,50,50)
+     Police.addImage(ShootingPolice)
+
+     archway=createSprite(940,100,20,30)
+     archway.addImage(arch)
+     archway.scale=0.6
+     zombieGroup=createGroup();
+     arrowGroup=createGroup();
+   zombiesGroup=createGroup();
+     vampireGroup=createGroup();
+
+   
+    
+}
+
+function draw() {
+  if(gameState === "start"){
+    background(title)
+    stroke ("red")
+    fill ("blue")
+  textSize(50)
+    text("Note : Please press space bar to start the game  ",290,930)
+   
+    if(keyDown("space")){
+      
+      
+      gameState = "rules";
+     }
+  }
+ if(gameState === "rules"){
+    background(Design)
+    textSize(30)
+    stroke("black")
+   fill("black")
+   text("Story:There is a small family of husband, wife and son.The man's name is John.He is a police officer.His wife's name is Ruby",200,100)
+   text("and his son's name is Alex.Today's is Alex's birthday and he has been kidnapped by some zombies and kept in an island. ",200,150)
+   text("His father has gone to the island to save his son.So can you help John to save his son.Let us Find out",200,200)
+   text("Rules of the game are",200,250)
+   text("1: You have to press up arrow key to shoot the bullets",200,300)
+   text("2: You have to kill zombies and score 50 points",200,350)
+   text("3: There is a timer given beside the score whose value assigned will be 0.",200,400)
+   text("4: If the timer reaches 10000 before you score 50 points then you will loose the game",200,450)
+   text("5: If you score 50 points before the timer reaches 10000 then you will win the game",200,500)
+   text("6: Move the mouse up and down to move the police",200,550)
+   text("Winning the game is not important.Hardwork is the key to success",200,600)
+   text("Note:Press down arrow key to enter the game",200,650)
+   text("This game is made by",1300,860)
+  
+   textSize(50)
+   text(" Read all the instructions carefully to win the game ",200,720)
+   fill(872,10,103)
+   textSize(40)
+   text("Himanshu Paul and Ritu Spall",1245,900)
+   if(keyDown("down")){
+     gameState = "play"
+   }
+ }
+  
+
+   if(gameState === "play"){
+   background(Back)
+   
+    timer=timer+1
+   
+   stroke("black")
+   strokeWeight(9)
+   fill("yellow")
+   textSize(50)
+   text("Time:"+timer,450,100)
+   fill("red")
+   stroke("yellow")
+   textSize(50)
+    text("Please press up arrow to shoot",500,910)
+     text("Score:"+score+",",100,100)
+     stroke("black")
+     strokeWeight(8.9)
+     fill(28,110,1911)
+     console.log(timer)
+     text("Score 50 points to win",1200,100)
+     if(arrowGroup.isTouching(zombieGroup)){
+       zombieGroup.destroyEach();
+       arrowGroup.destroyEach();
+       score=score+1
+     }
+
+     
+     if(arrowGroup.isTouching(zombiesGroup)){
+       zombiesGroup.destroyEach();
+       arrowGroup.destroyEach();
+       score=score+2
+     }
+     if(arrowGroup.isTouching(vampireGroup)){
+       vampireGroup.destroyEach();
+       arrowGroup.destroyEach();
+       score=score+3
+     }
+
+     
+  
+     
+     
+  
+
+    Police.y=World.mouseY
+
+
+    if (keyDown("up")){
+       createArrow();
+       Sound.play();
+     
+       
+   }
+   if(score>50){
+    gameState ="win";
+  }
+  if(timer === 10000 && score<50 ){
+    gameState="loose"
+  }
+  
+    spawnZombies();
+    largeZombies();
+    tallZombies();
+    drawSprites();
+   }
+   
+   if(gameState === "win"){
+     background(Winning)
+     stroke("black")
+     strokeWeight(6)
+     fill("pink")
+    textSize(60)
+    text("HOT DOG!",500,450)
+    text("YOU HAVE SAVED ALEX",500,500)
+    text("YOU WON THE GAME",500,550)
+    thumb=createSprite(940,100,20,30)
+    thumb.addImage(thumbsUp)
+    thumb.scale=0.6
+
+    
+    archway.destroy();
+     Police.destroy();
+     vampireGroup.destroyEach();
+     arrowGroup.destroyEach();
+     zombieGroup.destroyEach();
+     zombiesGroup.destroyEach();
+   Win();
+  
+   drawSprites();
+  }
+   if(gameState === "loose"){
+     background(lost)
+     stroke("black")
+     strokeWeight(9)
+     fill(119,0,197)
+     textSize(60)
+     text("OH NO!",700,499)
+     text("YOU LOST IT. ",600,600)
+     text("YOU COULD NOT SAVE ALEX",450,700)
+     text("YOU WERE PLAYING SO WELL",400,801)
+     fill(290,100,89)
+     text("PRESS RIGHT ARROW KEY TO RESTART THE GAME",200,900)
+     Lost();
+thumbs=createSprite(940,100,20,30)
+thumbs.addImage(thumbsDown)
+thumbs.scale=0.3
+
+dora=createSprite(300,100,20,30)
+  dora.addImage(doreamon)
+  dora.scale=0.3
+  nobi=createSprite(1300,100,20,30)
+  nobi.addImage(nobita)
+  nobi.scale=0.3
+  if(keyDown("right")){
+    gameState = "start"
+  }
+    archway.destroy();
+     Police.destroy();
+     vampireGroup.destroyEach();
+     arrowGroup.destroyEach();
+     zombieGroup.destroyEach();
+     zombiesGroup.destroyEach();
+     drawSprites();
+   }
+  console.log(gameState)
+ 
+ 
+}
+function spawnZombies(){
+if(frameCount % 80===0){
+
+  zombie=createSprite(78,Math.round(random(200,900)),30,30)
+  zombie.velocityX=12
+  zombie.addImage(Zombie2)
+  zombie.scale=0.5
+  zombie.lifetime=700
+  zombieGroup.add(zombie)
+  
+}
+}
+
+function largeZombies(){
+  if(frameCount % 169===0){
+    monsters=createSprite(68,Math.round(random(200,900)),30,30)
+    monsters.velocityX=10
+    monsters.addImage(Zombie1)
+    monsters.scale=0.4
+    monsters.lifetime=700
+    zombiesGroup.add(monsters)
+  }
+}
+
+function tallZombies(){
+  if(frameCount % 129===0){
+    vampire=createSprite(91,Math.round(random(200,900)),30,30)
+    vampire.velocityX=10
+    vampire.addImage(Zombie3)
+    vampire.scale=0.3
+    vampire.lifetime=700
+    vampireGroup.add(vampire)
+  }
+}
+function createArrow(){
+  arrow= createSprite(1580, Police.y, 5, 10);
+  arrow.addImage(bullet);
+  arrow.scale = 0.3;
+  rotate(arrow)
+  arrow.velocityX = -6;
+  arrowGroup.add(arrow)
+
+}
+
+function Win(){
+  mickey=createSprite(300,499,39,40)
+  mickey.addImage(Mickey)
+ 
+}
+
+function Lost(){
+   Loser=createSprite(1500,499,39,40)
+   Loser.addImage(loserMickey)
+   Loser.scale=0.9
+}
